@@ -12,6 +12,8 @@ export function BrandMark({
   return (
     <svg
       className={`brand-mark ${className}`}
+      data-motion-reactive="self"
+      data-motion-strength="3"
       viewBox="0 0 64 64"
       role={decorative ? undefined : 'img'}
       aria-hidden={decorative ? true : undefined}
@@ -26,4 +28,3 @@ export function BrandMark({
     </svg>
   )
 }
-

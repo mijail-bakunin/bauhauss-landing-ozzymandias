@@ -49,7 +49,12 @@ export function About({ locale }: { locale: Locale }) {
       <div className="about-grid" aria-hidden="true" />
       <div className="about-intro">
         <span className="eyebrow">{t.aboutEyebrow}</span>
-        <div className="about-mark"><BrandMark decorative /></div>
+        <div
+          className="about-mark"
+          data-motion-reactive="self"
+          data-motion-sound
+          data-motion-strength="5"
+        ><BrandMark decorative /></div>
       </div>
       <h2 id="about-title" className="about-word" data-kinetic-heading>
         {brand.statement[locale].split(' ').map((word, index) => (

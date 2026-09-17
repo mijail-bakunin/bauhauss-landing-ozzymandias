@@ -7,6 +7,10 @@ export function SectionGlyph({ variant, className = '' }: SectionGlyphProps) {
   return (
     <svg
       className={`section-glyph section-glyph--${variant} ${className}`}
+      data-motion-reactive="self"
+      data-motion-reveal="repeat"
+      data-motion-sound
+      data-motion-strength="5"
       viewBox="0 0 160 160"
       aria-hidden="true"
     >
@@ -51,4 +55,3 @@ export function SectionGlyph({ variant, className = '' }: SectionGlyphProps) {
     </svg>
   )
 }
-

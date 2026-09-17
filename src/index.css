@@ -151,6 +151,36 @@ body.modal-open {
   transition: translate 0.32s var(--ease-precise);
 }
 
+[data-motion-reactive] {
+  --motion-x: 0px;
+  --motion-y: 0px;
+  --motion-x-inverse: 0px;
+  --motion-y-inverse: 0px;
+  --motion-rotation: 0deg;
+}
+
+[data-motion-reactive="self"] {
+  translate: var(--motion-x) var(--motion-y);
+  rotate: var(--motion-rotation);
+  transition: translate 0.55s var(--ease-precise), rotate 0.55s var(--ease-precise);
+  will-change: translate, rotate;
+}
+
+[data-motion-reveal] {
+  opacity: 0.58;
+  scale: 0.955;
+  transition:
+    opacity 0.7s ease,
+    scale 1s var(--ease-precise),
+    translate 0.55s var(--ease-precise),
+    rotate 0.55s var(--ease-precise);
+}
+
+[data-motion-reveal].is-motion-visible {
+  opacity: 1;
+  scale: 1;
+}
+
 @media (pointer: fine) {
   html.art-cursor-enabled,
   html.art-cursor-enabled * { cursor: none !important; }
@@ -552,6 +582,33 @@ canvas {
   fill: var(--orange);
 }
 
+.brand-mark .mark-ring--outer {
+  stroke-dasharray: 88 19;
+  animation: mark-ring-travel 20s linear infinite;
+}
+
+.brand-mark .mark-ring--inner {
+  stroke-dasharray: 46 11;
+  animation: mark-ring-travel 13s linear infinite reverse;
+}
+
+.brand-mark .mark-line { animation: mark-line-calibrate 11s var(--ease-precise) infinite; }
+.brand-mark .mark-block { animation: mark-block-breathe 8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.brand-mark .mark-dot { animation: mark-dot-orbit 16s linear infinite; transform-origin: 26px 32px; }
+
+@keyframes mark-ring-travel { to { stroke-dashoffset: -107; } }
+@keyframes mark-line-calibrate {
+  0%, 72%, 100% { rotate: 0deg; }
+  82% { rotate: 2.5deg; }
+  90% { rotate: -1deg; }
+}
+@keyframes mark-block-breathe {
+  0%, 65%, 100% { scale: 1; }
+  78% { scale: 0.82 1.12; }
+  88% { scale: 1.06 0.94; }
+}
+@keyframes mark-dot-orbit { to { transform: rotate(360deg); } }
+
 .nav-brand:hover .mark-ring--outer { transform: rotate(60deg) scale(1.08); }
 .nav-brand:hover .mark-ring--inner { transform: rotate(-45deg) scale(0.84); }
 
@@ -669,6 +726,11 @@ canvas {
 .sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(1) { height: 9px; }
 .sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(2) { height: 16px; }
 .sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(3) { height: 11px; }
+.sound-toggle[aria-pressed="true"] .sound-bars i { animation: sound-bar-idle 1.8s ease-in-out infinite alternate; }
+.sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(2) { animation-delay: -0.65s; }
+.sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(3) { animation-delay: -1.1s; }
+
+@keyframes sound-bar-idle { to { scale: 1 0.58; opacity: 0.62; } }
 
 .language-selector {
   position: relative;
@@ -756,6 +818,8 @@ canvas {
 .section-rail a i { width: 7px; height: 7px; border: 1px solid currentColor; border-radius: 50%; }
 .section-rail a.is-active { color: var(--paper); background: var(--ink); }
 .section-rail a.is-active i { border-color: var(--orange); background: var(--orange); transform: scale(1.4); }
+.section-rail a.is-active i { animation: rail-dot-pulse 2.8s ease-in-out infinite; }
+@keyframes rail-dot-pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--orange) 18%, transparent); } }
 
 /* Hero */
 .hero-section {
@@ -803,6 +867,7 @@ canvas {
   background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 24px 24px;
   mask-image: linear-gradient(135deg, black, transparent 80%);
+  animation: hero-grid-drift 24s linear infinite alternate;
 }
 
 .hero-orbit {
@@ -812,12 +877,14 @@ canvas {
 }
 
 .hero-orbit::before {
+  --orbit-angle: 0deg;
   position: absolute;
   border: clamp(8px, 1.2vw, 18px) solid transparent;
   border-top-color: var(--orange);
   border-left-color: var(--orange);
   border-radius: 50%;
   content: "";
+  animation: hero-orbit-sweep 24s linear infinite;
 }
 
 .hero-orbit--one {
@@ -827,7 +894,7 @@ canvas {
   aspect-ratio: 1;
 }
 
-.hero-orbit--one::before { inset: -14px; transform: rotate(-28deg); }
+.hero-orbit--one::before { --orbit-angle: -28deg; inset: -14px; transform: rotate(var(--orbit-angle)); }
 
 .hero-orbit--two {
   right: 18%;
@@ -836,7 +903,19 @@ canvas {
   aspect-ratio: 1;
 }
 
-.hero-orbit--two::before { inset: 22%; border-width: clamp(9px, 1vw, 15px); border-color: transparent var(--ochre) var(--ochre) transparent; }
+.hero-orbit--two::before { --orbit-angle: 45deg; inset: 22%; border-width: clamp(9px, 1vw, 15px); border-color: transparent var(--ochre) var(--ochre) transparent; animation-duration: 31s; animation-direction: reverse; }
+
+.hero-frame[data-motion-reactive="field"] .hero-orbit--one,
+.hero-frame[data-motion-reactive="field"] .hero-module--two { translate: var(--motion-x) var(--motion-y); }
+.hero-frame[data-motion-reactive="field"] .hero-orbit--two,
+.hero-frame[data-motion-reactive="field"] .hero-module--one,
+.hero-frame[data-motion-reactive="field"] .hero-module--three { translate: var(--motion-x-inverse) var(--motion-y-inverse); }
+
+@keyframes hero-grid-drift { to { background-position: 24px 12px, 12px 24px; } }
+@keyframes hero-orbit-sweep {
+  from { transform: rotate(var(--orbit-angle)); }
+  to { transform: rotate(calc(var(--orbit-angle) + 360deg)); }
+}
 
 .hero-module {
   position: absolute;
@@ -860,6 +939,24 @@ canvas {
 .hero-module--three::before { width: 4px; height: 140%; left: 92%; top: -20%; }
 .hero-module--three::after { width: 145%; height: 1px; left: -24%; top: 76%; }
 
+.hero-module::before { animation: hero-module-horizontal 9s var(--ease-precise) infinite; transform-origin: left; }
+.hero-module::after { animation: hero-module-vertical 11s var(--ease-precise) infinite; transform-origin: top; }
+.hero-module--two::before,
+.hero-module--two::after { animation-delay: -3.4s; }
+.hero-module--three::before,
+.hero-module--three::after { animation-delay: -6.2s; }
+
+@keyframes hero-module-horizontal {
+  0%, 62%, 100% { scale: 1; opacity: 1; }
+  74% { scale: 0.72 1; opacity: 0.55; }
+  88% { scale: 1.04 1; }
+}
+@keyframes hero-module-vertical {
+  0%, 67%, 100% { scale: 1; opacity: 1; }
+  78% { scale: 1 0.66; opacity: 0.58; }
+  90% { scale: 1 1.03; }
+}
+
 .hero-color-rail {
   position: absolute;
   height: clamp(8px, 1vw, 17px);
@@ -868,6 +965,14 @@ canvas {
 
 .hero-color-rail--orange { top: 32%; left: 12%; width: 21%; background: var(--orange); }
 .hero-color-rail--ochre { right: 12%; bottom: 29%; width: 14%; background: var(--ochre); }
+
+.hero--assembled .hero-color-rail {
+  background-image: linear-gradient(100deg, transparent 0 35%, rgba(255,255,255,.38) 48%, transparent 62% 100%);
+  background-size: 260% 100%;
+  animation: rail-light-pass 9s ease-in-out infinite;
+}
+.hero--assembled .hero-color-rail--ochre { animation-delay: -4.2s; }
+@keyframes rail-light-pass { 0%, 64%, 100% { background-position: 120% 0; } 82% { background-position: -60% 0; } }
 
 .hero-meta {
   position: absolute;
@@ -905,6 +1010,17 @@ canvas {
 
 .hero-wordmark::before { top: -38%; left: 52%; background: color-mix(in srgb, var(--ochre) 88%, transparent); }
 .hero-wordmark::after { right: 13%; bottom: -32%; border: clamp(8px, 1vw, 15px) solid var(--orange); }
+
+.hero--assembled .hero-wordmark::before { animation: hero-node-float 8s ease-in-out infinite alternate; }
+.hero--assembled .hero-wordmark::after { animation: hero-node-float 11s ease-in-out -4s infinite alternate-reverse; }
+.hero--assembled .wordmark-node--ochre { animation: wordmark-node-drift 7s ease-in-out infinite alternate; }
+.hero--assembled .wordmark-node--orange { animation: wordmark-node-drift 9s ease-in-out -3s infinite alternate-reverse; }
+.hero--assembled .wordmark-guide--orange,
+.hero--assembled .wordmark-guide--ochre { animation: wordmark-guide-travel 12s linear infinite; }
+
+@keyframes hero-node-float { to { translate: 6px -8px; scale: 1.06; } }
+@keyframes wordmark-node-drift { to { translate: 8px -5px; scale: 1.08; } }
+@keyframes wordmark-guide-travel { to { stroke-dashoffset: -2; } }
 
 .hero-wordmark .wordmark-outline { stroke-width: 1.15; }
 
@@ -967,6 +1083,19 @@ canvas {
 .section-glyph .glyph-fill--ochre { fill: var(--ochre); }
 .section-glyph .glyph-accent { stroke: var(--orange); stroke-width: 4; }
 
+.section-glyph .glyph-construction { animation: glyph-construction-turn 38s linear infinite; transform-box: fill-box; transform-origin: center; }
+.section-glyph .glyph-fill { animation: glyph-node-float 9s ease-in-out infinite alternate; }
+.section-glyph .glyph-fill--orange { animation-delay: -3.2s; }
+.section-glyph .glyph-fill--ochre { animation-delay: -6.1s; }
+.section-glyph .glyph-accent { animation: glyph-accent-pulse 7s ease-in-out infinite; }
+.section-glyph .glyph-heavy { animation: glyph-heavy-calibrate 12s var(--ease-precise) infinite; }
+.section-glyph:hover .glyph-construction { animation-duration: 16s; }
+
+@keyframes glyph-construction-turn { to { transform: rotate(360deg); } }
+@keyframes glyph-node-float { to { translate: 5px -6px; scale: 1.04; } }
+@keyframes glyph-accent-pulse { 0%, 68%, 100% { opacity: 1; } 82% { opacity: 0.42; } }
+@keyframes glyph-heavy-calibrate { 0%, 70%, 100% { translate: 0 0; } 82% { translate: 4px -3px; } }
+
 /* Capabilities */
 .capabilities-section { border-top: 1px solid var(--line); }
 
@@ -1027,8 +1156,12 @@ canvas {
 }
 
 .portfolio-section .eyebrow::before { background: var(--ochre); }
-.portfolio-orbit { position: absolute; top: 7%; right: 7%; width: 240px; aspect-ratio: 1; border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); border-radius: 50%; }
-.portfolio-orbit i { position: absolute; top: -9px; left: 48%; width: 18px; height: 18px; border-radius: 50%; background: var(--orange); }
+.portfolio-orbit { --portfolio-orbit-size: 240px; position: absolute; top: 7%; right: 7%; width: var(--portfolio-orbit-size); aspect-ratio: 1; border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); border-radius: 50%; }
+.portfolio-orbit::after { position: absolute; inset: 18%; border: 1px solid color-mix(in srgb, var(--paper) 12%, transparent); border-radius: 50%; content: ""; animation: orbit-breathe 8s ease-in-out infinite alternate; }
+.portfolio-orbit i { position: absolute; top: -9px; left: calc(50% - 9px); width: 18px; height: 18px; border-radius: 50%; background: var(--orange); animation: portfolio-marker-orbit 15s linear infinite; transform-origin: 9px calc(var(--portfolio-orbit-size) / 2 + 9px); }
+
+@keyframes portfolio-marker-orbit { to { transform: rotate(360deg); } }
+@keyframes orbit-breathe { to { scale: 1.09; opacity: 0.35; } }
 
 .projects-grid {
   position: relative;
@@ -1037,7 +1170,7 @@ canvas {
   gap: clamp(24px, 3vw, 50px);
 }
 
-.project-card { position: relative; min-width: 0; }
+.project-card { position: relative; min-width: 0; transition: translate .55s var(--ease-precise), rotate .55s var(--ease-precise); }
 .project-card--1 { grid-column: 1 / span 8; }
 .project-card--2 { grid-column: 9 / span 4; margin-top: 18vw; }
 .project-card--3 { grid-column: 3 / span 8; margin-top: 5vw; }
@@ -1066,6 +1199,8 @@ canvas {
 .project-card:hover .project-media__grid { opacity: .48; }
 .project-open-symbol { position: absolute; right: 16px; top: 16px; display: grid; width: 48px; height: 48px; place-items: center; color: #111; background: var(--orange); font-size: 1.35rem; transform: rotate(-45deg) scale(.86); transition: transform .5s var(--ease-precise); }
 .project-card:hover .project-open-symbol { transform: rotate(0) scale(1); }
+.project-card:not(:hover) .project-open-symbol { animation: project-symbol-idle 8s var(--ease-precise) infinite; }
+@keyframes project-symbol-idle { 0%, 68%, 100% { rotate: 0deg; } 80% { rotate: 6deg; } 90% { rotate: -2deg; } }
 
 .project-meta { padding: 18px 0 10px; border-top: 1px solid color-mix(in srgb, var(--paper) 28%, transparent); }
 .project-meta > div:first-child { display: flex; justify-content: space-between; gap: 20px; color: color-mix(in srgb, var(--paper) 65%, transparent); font: .7rem "Ozzy Condensed", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
@@ -1093,7 +1228,8 @@ canvas {
   color: #0d0e0c;
 }
 
-.about-grid { position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px); background-size: clamp(46px, 6vw, 90px) clamp(46px, 6vw, 90px); mask-image: linear-gradient(to bottom, black, transparent 75%); }
+.about-grid { position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px); background-size: clamp(46px, 6vw, 90px) clamp(46px, 6vw, 90px); mask-image: linear-gradient(to bottom, black, transparent 75%); animation: about-grid-drift 30s linear infinite alternate; }
+@keyframes about-grid-drift { to { background-position: 32px 16px, 16px 32px; } }
 .about-intro { position: relative; display: flex; align-items: start; justify-content: space-between; }
 .about-intro .eyebrow::before { background: #111; }
 .about-mark { width: clamp(90px, 12vw, 170px); }
@@ -1150,6 +1286,8 @@ canvas {
 .assembly-button i { position: relative; z-index: 1; }
 .assembly-button i { width: 14px; height: 14px; border: 1px solid currentColor; border-radius: 50%; transition: transform .5s; }
 .assembly-button:hover i { transform: scale(1.5); background: currentColor; }
+.assembly-button:not(:hover) i { animation: submit-dot-pulse 3.8s ease-in-out infinite; }
+@keyframes submit-dot-pulse { 50% { scale: .65; box-shadow: 0 0 0 5px color-mix(in srgb, var(--orange) 24%, transparent); } }
 .assembly-button:disabled { cursor: progress; opacity: .55; }
 .form-status { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.4; }
 .form-status--success { color: var(--success); }
@@ -1228,6 +1366,14 @@ canvas {
 .team-avatar i:nth-child(1) { top: 14%; left: 20%; width: 60%; aspect-ratio: 1; border-radius: 50%; }
 .team-avatar i:nth-child(2) { right: 8%; bottom: 10%; width: 55%; height: 58%; border-width: 8px 1px 1px 8px; border-color: var(--orange) var(--ink) var(--ink) var(--orange); }
 .team-avatar i:nth-child(3) { top: 0; left: 48%; width: 1px; height: 100%; background: var(--ink); transform: rotate(28deg); }
+.team-avatar i:nth-child(1) { animation: avatar-circle-drift 12s ease-in-out infinite alternate; }
+.team-avatar i:nth-child(2) { animation: avatar-frame-drift 15s var(--ease-precise) -4s infinite alternate; }
+.team-avatar i:nth-child(3) { animation: avatar-axis-drift 18s ease-in-out -8s infinite alternate; }
+.team-card:hover .team-avatar i { animation-play-state: paused; }
+
+@keyframes avatar-circle-drift { to { translate: 5px -7px; scale: .94; } }
+@keyframes avatar-frame-drift { to { translate: -6px 4px; rotate: 4deg; } }
+@keyframes avatar-axis-drift { to { translate: 7px 0; rotate: 3deg; } }
 .team-card:nth-child(2n) .team-avatar { background: var(--ochre); }
 .team-card:nth-child(3n) .team-avatar { background: var(--orange); }
 .team-card > span { color: var(--muted); font-size: .65rem; }
@@ -1338,7 +1484,7 @@ canvas {
   .project-card--2 .project-media { aspect-ratio: 4/4.6; }
   .project-meta h3,
   .project-card--2 .project-meta h3 { font-size: clamp(3rem, 16vw, 5.5rem); }
-  .portfolio-orbit { width: 150px; right: -40px; }
+  .portfolio-orbit { --portfolio-orbit-size: 150px; right: -40px; }
   .portfolio-pagination { grid-template-columns: 1fr 1fr; }
   .portfolio-pagination > span { grid-column: 1 / -1; grid-row: 1; text-align: center; }
   .about-section { min-height: 110svh; }
@@ -1375,6 +1521,22 @@ canvas {
   .project-page__hero h1 { font-size: clamp(5rem, 24vw, 8.5rem); }
   .project-page__media { height: 72svh; }
   .project-page__body { grid-template-columns: 1fr; }
+
+  .hero-module::before,
+  .hero-module::after,
+  .about-grid,
+  .project-open-symbol,
+  .section-rail a.is-active i { animation: none; }
+
+  .section-glyph .glyph-construction { animation-duration: 58s; }
+  .section-glyph .glyph-fill { animation-duration: 15s; }
+}
+
+@media (pointer: coarse) {
+  [data-motion-reactive="self"] {
+    translate: 0 0 !important;
+    rotate: 0deg !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
