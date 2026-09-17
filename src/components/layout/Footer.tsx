@@ -14,33 +14,70 @@ export function Footer({ locale, onOpenPreferences }: FooterProps) {
   const t = copy[locale]
   const year = new Date().getFullYear()
   const copyright = year === brand.copyrightStartYear ? year : `${brand.copyrightStartYear}—${year}`
-  const socialEntries = Object.entries(brand.socials).filter(([, url]) => Boolean(url))
-  const placeholders = {
-    es: { nav: 'Navegación del pie', email: 'Email / pendiente', location: 'Argentina / ubicación pendiente' },
-    pt: { nav: 'Navegação do rodapé', email: 'Email / pendente', location: 'Argentina / localização pendente' },
-    en: { nav: 'Footer navigation', email: 'Email / pending', location: 'Argentina / location pending' },
+  const socialEntries = Object.entries(brand.socials).map(([network, url]) => ({
+    network,
+    url,
+    icon: `/images/social/${network}.png`,
+  }))
+  const labels = {
+    es: { nav: 'Navegación del pie', social: 'Redes / Canales', top: 'Volver arriba', project: 'Iniciar un proyecto' },
+    pt: { nav: 'Navegação do rodapé', social: 'Redes / Canais', top: 'Voltar ao topo', project: 'Iniciar um projeto' },
+    en: { nav: 'Footer navigation', social: 'Social / Channels', top: 'Back to top', project: 'Start a project' },
   }[locale]
 
   return (
     <footer className="site-footer">
-      <div className="footer-primary">
-        <div className="footer-brand">
+      <div className="footer-intro">
+        <div className="footer-brand-lockup">
           <BrandMark decorative />
-          <strong>{brand.name}</strong>
-          <span>{t.footerStatement}</span>
+          <div>
+            <span>OZ / 00—∞</span>
+            <strong>{brand.name}</strong>
+          </div>
         </div>
-        <nav aria-label={placeholders.nav}>
+        <p>{t.footerStatement}</p>
+        <Link className="footer-project-link" data-magnetic to={`${routeMap[locale].home}#contact`}>
+          <span>{labels.project}</span>
+          <i aria-hidden="true">↗</i>
+        </Link>
+      </div>
+
+      <div className="footer-nav-rail">
+        <nav aria-label={labels.nav}>
           {navItems.map((item) => (
-            <Link key={item.id} to={`${routeMap[locale].home}#${item.id}`}>{item.label[locale]}</Link>
+            <Link data-magnetic key={item.id} to={`${routeMap[locale].home}#${item.id}`}>
+              <span>{item.label[locale]}</span><i aria-hidden="true" />
+            </Link>
           ))}
-          <Link to={routeMap[locale].team}>{t.teamLink}</Link>
+          <Link data-magnetic to={routeMap[locale].team}><span>{t.teamLink}</span><i aria-hidden="true" /></Link>
         </nav>
-        <div className="footer-contact">
-          {brand.email ? <a href={`mailto:${brand.email}`}>{brand.email}</a> : <span>{placeholders.email}</span>}
-          {brand.location ? <span>{brand.location}</span> : <span>{placeholders.location}</span>}
-          {socialEntries.map(([network, url]) => <a href={url} key={network}>{network}</a>)}
+        <Link className="footer-top-link" to={`${routeMap[locale].home}#home`}>
+          {labels.top}<span aria-hidden="true">↑</span>
+        </Link>
+      </div>
+
+      <div className="footer-socials">
+        <span>{labels.social}</span>
+        <div className="footer-social-list">
+          {socialEntries.map(({ network, url, icon }, index) => (
+            <a
+              data-motion-reactive="self"
+              data-motion-sound
+              data-motion-strength="3"
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              key={network}
+            >
+              <span className="footer-social-index">0{index + 1}</span>
+              <img src={icon} alt="" aria-hidden="true" />
+              <strong>{network}</strong>
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))}
         </div>
       </div>
+
       <div className="footer-secondary">
         <span>© {copyright} {brand.name}</span>
         <div>

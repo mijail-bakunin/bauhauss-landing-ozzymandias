@@ -15,12 +15,11 @@ export const brand = {
   email: '',
   location: '',
   socials: {
-    instagram: '',
-    linkedin: '',
-    behance: '',
+    youtube: 'https://www.youtube.com/',
+    instagram: 'https://www.instagram.com/',
+    twitter: 'https://twitter.com/',
   },
   copyrightStartYear: 2026,
 } as const
 
 export const supportedBrandCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -&.'
-
