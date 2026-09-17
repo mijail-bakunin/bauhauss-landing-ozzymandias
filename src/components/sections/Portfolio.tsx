@@ -53,7 +53,13 @@ export function Portfolio({ locale }: { locale: Locale }) {
       data-track-section="portfolio"
       aria-labelledby="portfolio-title"
     >
-      <div className="portfolio-orbit" aria-hidden="true"><i /></div>
+      <div
+        className="portfolio-orbit"
+        data-motion-reactive="self"
+        data-motion-sound
+        data-motion-strength="4"
+        aria-hidden="true"
+      ><i /></div>
       <div className="section-heading section-heading--portfolio">
         <span className="eyebrow">{t.portfolioEyebrow}</span>
         <h2 id="portfolio-title"><KineticText text={t.portfolioLead} /></h2>
@@ -63,6 +69,9 @@ export function Portfolio({ locale }: { locale: Locale }) {
         {visibleProjects.map((project, index) => (
           <article
             className={`project-card project-card--${index + 1} project-card--${project.accent}`}
+            data-motion-reactive="self"
+            data-motion-sound
+            data-motion-strength="2.5"
             key={project.slug}
           >
             <Link

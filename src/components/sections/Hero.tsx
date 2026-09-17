@@ -175,7 +175,7 @@ export function Hero({ locale, onAssembled }: HeroProps) {
         {t.skipIntro}
       </button>
 
-      <div className="hero-frame">
+      <div className="hero-frame" data-motion-reactive="field" data-motion-strength="5">
         <div className="hero-grid" aria-hidden="true" data-hero-construction />
         <div className="hero-orbit hero-orbit--one" aria-hidden="true" data-hero-construction />
         <div className="hero-orbit hero-orbit--two" aria-hidden="true" data-hero-construction />

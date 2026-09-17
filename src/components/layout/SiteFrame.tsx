@@ -13,6 +13,7 @@ import { ArtCursor } from '../motion/ArtCursor'
 import { RouteTransition } from '../motion/RouteTransition'
 import { ScrollProgress } from '../motion/ScrollProgress'
 import { useEditorialMotion } from '../../hooks/useEditorialMotion'
+import { useMotionField } from '../../hooks/useMotionField'
 
 interface SiteFrameProps {
   locale: Locale
@@ -28,6 +29,7 @@ export function SiteFrame({ locale, children, showRail = false }: SiteFrameProps
   const [privacyOpen, setPrivacyOpen] = useState(false)
   const skipLabel = { es: 'Saltar al contenido', pt: 'Pular para o conteúdo', en: 'Skip to content' }[locale]
   useEditorialMotion(frameRef)
+  useMotionField(frameRef, sound.cue)
 
   useEffect(() => {
     initAnalytics()

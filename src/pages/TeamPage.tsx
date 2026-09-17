@@ -25,7 +25,13 @@ export function TeamPage({ locale }: { locale: Locale }) {
         <div className="team-grid">
           {Array.from({ length: 6 }, (_, index) => (
             <article className="team-card" key={index}>
-              <div className={`team-avatar team-avatar--${index + 1}`} aria-hidden="true">
+              <div
+                className={`team-avatar team-avatar--${index + 1}`}
+                data-motion-reactive="self"
+                data-motion-sound
+                data-motion-strength="4"
+                aria-hidden="true"
+              >
                 <i /><i /><i />
               </div>
               <span>0{index + 1}</span>
