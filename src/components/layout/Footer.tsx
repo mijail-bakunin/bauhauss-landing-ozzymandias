@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { brand } from '../../config/brand'
-import { copy, navItems } from '../../data/content'
+import { copy } from '../../data/content'
 import { routeMap } from '../../config/routes'
 import type { Locale } from '../../types'
 import { BrandMark } from '../branding/BrandMark'
@@ -20,70 +20,54 @@ export function Footer({ locale, onOpenPreferences }: FooterProps) {
     icon: `/images/social/${network}.png`,
   }))
   const labels = {
-    es: { nav: 'Navegación del pie', social: 'Redes / Canales', top: 'Volver arriba', project: 'Iniciar un proyecto' },
-    pt: { nav: 'Navegação do rodapé', social: 'Redes / Canais', top: 'Voltar ao topo', project: 'Iniciar um projeto' },
-    en: { nav: 'Footer navigation', social: 'Social / Channels', top: 'Back to top', project: 'Start a project' },
+    es: { social: 'Redes', top: 'Volver arriba', talk: 'Hablemos', signature: 'Sistemas · Productos · Experiencias' },
+    pt: { social: 'Redes', top: 'Voltar ao topo', talk: 'Vamos conversar', signature: 'Sistemas · Produtos · Experiências' },
+    en: { social: 'Social channels', top: 'Back to top', talk: 'Let’s talk', signature: 'Systems · Products · Experiences' },
   }[locale]
 
   return (
     <footer className="site-footer">
-      <div className="footer-intro">
-        <div className="footer-brand-lockup">
+      <div className="footer-main">
+        <Link className="footer-identity" data-magnetic to={routeMap[locale].home}>
           <BrandMark decorative />
           <div>
-            <span>OZ / 00—∞</span>
             <strong>{brand.name}</strong>
+            <span>{labels.signature}</span>
           </div>
-        </div>
-        <p>{t.footerStatement}</p>
-        <Link className="footer-project-link" data-magnetic to={`${routeMap[locale].home}#contact`}>
-          <span>{labels.project}</span>
+        </Link>
+
+        <Link className="footer-talk" data-magnetic to={`${routeMap[locale].home}#contact`}>
+          <span>{labels.talk}</span>
           <i aria-hidden="true">↗</i>
         </Link>
-      </div>
 
-      <div className="footer-nav-rail">
-        <nav aria-label={labels.nav}>
-          {navItems.map((item) => (
-            <Link data-magnetic key={item.id} to={`${routeMap[locale].home}#${item.id}`}>
-              <span>{item.label[locale]}</span><i aria-hidden="true" />
-            </Link>
-          ))}
-          <Link data-magnetic to={routeMap[locale].team}><span>{t.teamLink}</span><i aria-hidden="true" /></Link>
-        </nav>
-        <Link className="footer-top-link" to={`${routeMap[locale].home}#home`}>
-          {labels.top}<span aria-hidden="true">↑</span>
-        </Link>
-      </div>
-
-      <div className="footer-socials">
-        <span>{labels.social}</span>
-        <div className="footer-social-list">
-          {socialEntries.map(({ network, url, icon }, index) => (
+        <nav className="footer-social-list" aria-label={labels.social}>
+          {socialEntries.map(({ network, url, icon }) => (
             <a
               data-motion-reactive="self"
-              data-motion-sound
-              data-motion-strength="3"
+              data-motion-strength="2"
               href={url}
               target="_blank"
               rel="noreferrer"
               key={network}
             >
-              <span className="footer-social-index">0{index + 1}</span>
               <img src={icon} alt="" aria-hidden="true" />
-              <strong>{network}</strong>
-              <span aria-hidden="true">↗</span>
+              <span>{network}</span>
             </a>
           ))}
-        </div>
+        </nav>
       </div>
 
-      <div className="footer-secondary">
+      <div className="footer-meta">
         <span>© {copyright} {brand.name}</span>
+        <span className="footer-coordinate">ARG / 34°36′S</span>
         <div>
           <Link to={routeMap[locale].privacy}>{t.privacy}</Link>
           <Link to={routeMap[locale].terms}>{t.terms}</Link>
           <button type="button" onClick={onOpenPreferences}>{t.preferences}</button>
+          <Link className="footer-top-link" to={`${routeMap[locale].home}#home`}>
+            {labels.top}<span aria-hidden="true">↑</span>
+          </Link>
         </div>
       </div>
     </footer>
